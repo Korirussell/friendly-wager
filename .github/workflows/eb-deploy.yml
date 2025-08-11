@@ -45,6 +45,11 @@ jobs:
       - name: Upload to S3 and create EB application version
         run: |
           S3_BUCKET=${{ secrets.EB_S3_BUCKET }}
+          # Create bucket if it doesn't exist (idempotent). Ignore errors if exists.
+          if ! aws s3api head-bucket --bucket "$S3_BUCKET" 2>/dev/null; then
+            aws s3api create-bucket --bucket "$S3_BUCKET" --region "$AWS_REGION" \
+              $( [ "$AWS_REGION" != "us-east-1" ] && echo "--create-bucket-configuration LocationConstraint=$AWS_REGION" ) || true
+          fi
           VERSION_LABEL=fw-${{ github.run_id }}-${{ github.run_number }}
           aws s3 cp deploy.zip s3://$S3_BUCKET/$VERSION_LABEL.zip
           aws elasticbeanstalk create-application-version \
