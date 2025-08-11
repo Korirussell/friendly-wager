@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: FriendlyWager
+  datasource:
+    url: jdbc:postgresql://localhost:5432/friendly_wager
+    username: fw_user
+    password: fw_pass
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.security: INFO
+    org.hibernate.SQL: WARN
+
+friendlywager:
+  security:
+    jwt:
+      issuer: friendly-wager
+      secret: change-this-dev-secret-at-least-32-chars-123456
+      expiration-minutes: 120
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+

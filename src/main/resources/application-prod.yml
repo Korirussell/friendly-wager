@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+server:
+  port: ${PORT:8080}
+
+friendlywager:
+  security:
+    jwt:
+      issuer: ${JWT_ISSUER:friendly-wager}
+      secret: ${JWT_SECRET}
+      expiration-minutes: ${JWT_EXP_MINUTES:120}
+
+# Optional CORS config
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
+
