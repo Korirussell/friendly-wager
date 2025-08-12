@@ -77,6 +77,18 @@ public class SecurityConfig {
                     token = fallback.trim();
                 }
             }
+            if (token == null) {
+                String fwd = request.getHeader("X-Forwarded-Authorization");
+                if (fwd != null && fwd.startsWith("Bearer ")) {
+                    token = fwd.substring(7).trim();
+                }
+            }
+            if (token == null) {
+                String qp = request.getParameter("access_token");
+                if (qp != null && !qp.isBlank()) {
+                    token = qp.trim();
+                }
+            }
             if (token != null) {
                 try {
                     Claims claims = jwtService.parse(token);
