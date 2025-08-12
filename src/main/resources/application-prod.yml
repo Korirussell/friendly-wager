@@ -10,6 +10,9 @@ spring:
     open-in-view: false
   flyway:
     enabled: ${FLYWAY_ENABLED:true}
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
+    out-of-order: ${FLYWAY_OUT_OF_ORDER:true}
+    validate-on-migrate: ${FLYWAY_VALIDATE_ON_MIGRATE:false}
 
 server:
   port: ${PORT:8080}
