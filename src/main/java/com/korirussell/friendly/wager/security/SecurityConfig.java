@@ -66,8 +66,18 @@ public class SecurityConfig {
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
                 throws ServletException, IOException {
             String auth = request.getHeader("Authorization");
+            String token = null;
             if (auth != null && auth.startsWith("Bearer ")) {
-                String token = auth.substring(7);
+                token = auth.substring(7);
+            }
+            // Fallback header for proxies that strip Authorization
+            if (token == null) {
+                String fallback = request.getHeader("X-Auth-Token");
+                if (fallback != null && !fallback.isBlank()) {
+                    token = fallback.trim();
+                }
+            }
+            if (token != null) {
                 try {
                     Claims claims = jwtService.parse(token);
                     String subject = claims.getSubject();
